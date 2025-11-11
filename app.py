@@ -129,6 +129,20 @@ def analyze_url(url):
         'URL': url
     }
 
+def get_color_style(val):
+    """
+    Applies background color style based on quality.
+    Uses light, readable colors.
+    """
+    val = str(val).lower()
+    if 'high' in val:
+        return 'background-color: #D6FFD6' # Light Green
+    if 'medium' in val:
+        return 'background-color: #FFFFD6' # Light Yellow
+    if 'low' in val:
+        return 'background-color: #FFD6D6' # Light Red
+    return '' # Default
+
 # --- Main App UI ---
 
 # Initialize session state
@@ -173,7 +187,10 @@ if st.session_state.backlinks_df is None:
 
 # --- Results Screen ---
 else:
-    df = st.session_state.backlinks_df
+    df = st.session_state.backlinks_df.copy() # Use a copy to avoid changing session state
+    
+    # --- Add "No." column ---
+    df.insert(0, 'No.', range(1, len(df) + 1))
     
     # --- Summary Metrics ---
     st.subheader("Analysis Summary")
@@ -220,12 +237,21 @@ else:
     else:
         filtered_df = df
 
-    # Display the dataframe
-    # Streamlit's dataframe has built-in sorting
+    # Display the dataframe with styling and new column order
     st.dataframe(
-        filtered_df,
-        # Reorder columns to be more logical
-        column_order=('Domain', 'Quality', 'Domain Authority', 'Link Type', 'Action', 'Assessment', 'Recommendation', 'URL'),
+        filtered_df.style.applymap(get_color_style, subset=['Quality', 'Domain Authority']),
+        # Reorder columns as requested
+        column_order=(
+            'No.', 
+            'URL', 
+            'Domain', 
+            'Quality', 
+            'Domain Authority', 
+            'Link Type', 
+            'Action', 
+            'Assessment', 
+            'Recommendation'
+        ),
         use_container_width=True,
         hide_index=True
     )
