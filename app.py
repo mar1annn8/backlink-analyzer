@@ -138,13 +138,14 @@ def analyze_url(url):
         action = 'Monitor'
     
     else:
+        # --- UPDATED DEFAULT LOGIC ---
         # Default for unmatched links
         quality = 'Low'
         domain_authority = 'Low'
         link_type = 'General'
-        assessment = 'Neutral - General unclassified link'
-        recommendation = 'Review - Manual assessment needed'
-        action = 'Review'
+        assessment = 'Low - Unclassified link, minimal SEO benefit'
+        recommendation = 'Monitor - Minimal benefit, likely harmless'
+        action = 'Monitor'
     
     return {
         'Domain': domain,
