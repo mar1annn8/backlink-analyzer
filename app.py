@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 
 def analyze_url(url):
     """
-    Simulates the analysis of a single URL in Python.
+    Simulates the analysis of a single URL in Python with more specific rules.
     """
     try:
         # Use urlparse to reliably get the domain
@@ -21,17 +21,24 @@ def analyze_url(url):
     link_type = 'Unknown'
     assessment = ''
     recommendation = ''
-    action = 'Monitor'
+    action = 'Monitor' # Action is the single-word category
 
-    # --- Mock Analysis Logic (Python version) ---
+    # --- Updated Mock Analysis Logic (Python version) ---
     high_quality_domains = [
         'zillow.com', 'realtor.com', 'redfin.com', 'trulia.com',
         'gritdaily.com', 'forbes.com', 'wsj.com', 'nytimes.com',
         'luxuryhomemarketing.com', 'wcr.org'
     ]
     
-    spam_indicators = ['blogspot.com', 'wordpress.com', 'notifyninja.com']
-    low_quality_patterns = ['bizlistings', 'jobsapp', 'visualvisitor']
+    # Added more specific lists based on your examples
+    spam_networks = ['spam-network-example.com', 'link-farm-domain.net']
+    job_patterns = ['jobsapp', 'job-listing.com']
+    spam_indicators = [
+        'blogspot.com', 'wordpress.com', 'notifyninja.com', 
+        'christmas-blog-spam.com'
+    ]
+    low_quality_patterns = ['bizlistings', 'visualvisitor']
+
 
     if any(d in domain for d in high_quality_domains):
         if 'zillow.com' in domain or 'realtor.com' in domain:
@@ -45,8 +52,8 @@ def analyze_url(url):
             quality = 'High'
             domain_authority = 'High'
             link_type = 'Editorial/Contextual'
-            assessment = 'Excellent - Legitimate publication with editorial content'
-            recommendation = 'Keep - High value link'
+            assessment = 'Excellent - Legitimate tech/business publication with editorial content' # Your example
+            recommendation = 'Keep - High value link' # Your example
             action = 'Maintain'
         elif 'luxuryhomemarketing.com' in domain or 'wcr.org' in domain:
             quality = 'High'
@@ -56,33 +63,54 @@ def analyze_url(url):
             recommendation = 'Keep - Industry authority'
             action = 'Maintain'
     
+    elif any(s in domain for s in spam_networks):
+        quality = 'Very Low'
+        domain_authority = 'Very Low'
+        link_type = 'Spam Network'
+        assessment = 'Poor - Part of spam blog network' # Your example
+        recommendation = 'Disavow - Spam network' # Your example
+        action = 'Disavow'
+
     elif any(s in domain for s in spam_indicators):
         quality = 'Very Low'
         domain_authority = 'Very Low'
             
         if 'blogspot.com' in domain:
             link_type = 'Spam Blog'
-            assessment = 'Poor - Auto-generated spam blog with scraped content'
-            recommendation = 'Disavow - Potential SEO harm'
+            assessment = 'Poor - Auto-generated spam blog with scraped content' # Your example
+            recommendation = 'Disavow - Potential SEO harm' # Your example
             action = 'Disavow'
         elif 'notifyninja.com' in domain:
             link_type = 'Tool/Utility'
-            assessment = 'Poor - Website monitoring tool with no SEO value'
-            recommendation = 'Disavow - Zero value'
+            assessment = 'Poor - Website monitoring tool with no SEO value' # Your example
+            recommendation = 'Disavow - 9 duplicate links, zero value' # Your example
             action = 'Disavow'
         elif 'wordpress.com' in domain:
             link_type = 'Blog Post'
             quality = 'Low-Medium'
-            assessment = 'Context-dependent - Could be legitimate'
-            recommendation = 'Review - Check relevance and context'
+            assessment = 'Context-dependent - Could be legitimate charity/organization' # Your example
+            recommendation = 'Review - Check relevance and context' # Your example
             action = 'Review'
+        elif 'christmas-blog-spam.com' in domain:
+            link_type = 'Spam Blog'
+            assessment = 'Poor - Irrelevant spam blog (Christmas content)' # Your example
+            recommendation = 'Disavow - Completely irrelevant' # Your example
+            action = 'Disavow'
+
+    elif any(p in domain for p in job_patterns):
+        quality = 'Low'
+        domain_authority = 'Very Low'
+        link_type = 'Job Board'
+        assessment = 'Poor - Low quality job/business directory' # Your example
+        recommendation = 'Monitor - Minimal SEO value' # Your example
+        action = 'Monitor'
     
     elif any(p in domain for p in low_quality_patterns):
         quality = 'Low'
         domain_authority = 'Very Low'
         link_type = 'Generic Directory'
-        assessment = 'Poor - Low authority generic business directory'
-        recommendation = 'Monitor - Minimal benefit'
+        assessment = 'Poor - Low authority generic business directory' # Your example
+        recommendation = 'Monitor - Minimal benefit, likely harmless' # Your example
         action = 'Monitor'
     
     elif 'chamber' in domain:
@@ -166,7 +194,7 @@ if st.session_state.backlinks_df is None:
         input_urls = st.text_area(
             "Enter Backlink URLs (one per line)",
             height=300,
-            placeholder="https://example.com/page1\nhttps://example.com/page2\nhttps://example.com/page3"
+            placeholder="https://example.com/page1\nhttps://example.com/page2\nhttps://example.com/page3\nhttps://spam-network-example.com/link\nhttps://christmas-blog-spam.com/post"
         )
         
         analyze_button = st.button("Analyze Backlinks", type="primary", use_container_width=True)
