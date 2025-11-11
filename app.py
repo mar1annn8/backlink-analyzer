@@ -284,3 +284,12 @@ else:
         use_container_width=True,
         hide_index=True
     )
+
+# --- Buy Me A Coffee Button ---
+st.divider()
+# Adding the donation button
+try:
+    from streamlit_extras.buy_me_a_coffee import button
+    button(username="mar1ann8", floating=False, width=221)
+except ImportError:
+    st.write("Could not import Buy Me A Coffee button. Is `streamlit-extras` installed?")
