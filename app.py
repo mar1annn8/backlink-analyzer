@@ -204,7 +204,7 @@ else:
             )
 
         with col3:
-            if st.button("Reset", use_container_widh=True):
+            if st.button("Reset", use_container_width=True):
                 st.session_state.backlinks_df = None
                 st.session_state.input_urls = ""
                 st.rerun()
