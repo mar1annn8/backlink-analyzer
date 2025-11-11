@@ -3,7 +3,7 @@ import pandas as pd
 from urllib.parse import urlparse
 
 # Set page config for a wider layout
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="Backlink Analyzer by mar1ann8")
 
 def analyze_url(url):
     """
